@@ -1,0 +1,48 @@
+Atom.js is a small, easy to use JavaScript class that provides asynchronous
+control flow, property listeners, barriers, and more.
+
+Features:
+ - under 9K (under 3K minified).
+ - works in a browser or in node.
+
+
+Usage example:
+
+// Instanciate an atom
+var a = atom.create();
+
+// Set some arbitrary properties on the atom
+a.set({
+	color: 'fugilin',
+	spin: 1/3,
+	module: 'My Module'
+});
+
+// Register a listener to be called when a list of properties have been set
+a.once(['data_access', 'api_auth', 'document_ready'], function (dal, api, doc) {
+	api.selectColorTheme(a.get('color'));
+	api.showUI(doc);
+	a.set('initialized');
+});
+
+// Register a listener to be called whenever a property changes
+a.bind('error', funtion (error) {
+	console.log('There was a grevious calamity of code in ' + a.get('module'));
+	console.log(error);
+});
+
+// String together a series of asynchronous functions
+a.chain(
+	function (nextLink) {
+		callAjaxMethod('foo', function (result) {
+			nextLink(result);
+		});
+	},
+	function (nextLink, resultOfFoo) {
+		callAjaxMethod('bar', function (result) {
+			nextLink();
+		});
+	}
+);
+
+...
