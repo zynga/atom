@@ -1,12 +1,23 @@
+OVERVIEW:
+
 Atom.js is a small, easy to use JavaScript class that provides asynchronous
 control flow, property listeners, barriers, and more.
 
-Features:
- - under 9K (under 3K minified).
- - works in a browser or in node.
+
+FEATURES:
+
+ - Under 9K (under 3K minified).
+ - Works in a browser or in node.
+ - No dependencies (except for running unit tests)
 
 
-Usage example:
+UNIT TESTS:
+
+node atom-test.js      // brief
+node atom-test.js -v   // verbose
+
+
+EXAMPLES:
 
 // Instanciate an atom
 var a = atom.create();
@@ -44,5 +55,3 @@ a.chain(
 		});
 	}
 );
-
-...

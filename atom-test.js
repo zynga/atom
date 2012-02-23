@@ -1,9 +1,12 @@
 /*global atom, clock, console, require, test*/
 atom = typeof atom == 'undefined' ? require('./atom') : atom;
-clock = typeof clock == 'undefined' ? require('./clock') : clock;
-test = typeof test == 'undefined' ? require('./test') : test;
+clock = typeof clock == 'undefined' ? require('./clock/clock') : clock;
+test = typeof test == 'undefined' ? require('./test/test') : test;
 
 var
+	argv = process.argv,
+	arg2 = argv.length > 2 && argv[2],
+	verbose = arg2 == '-v',
 	a = atom.create(),
 	session = test.session(),
 	assert = session.assert,
@@ -258,9 +261,9 @@ assert('entangle() works for maps', results + '' == 'set,once,M1,N1');
 
 
 session.chain(function () {
-	var brief = session.brief();
-	if (brief.length) {
-		console.log(brief);
+	var log = verbose ? session.log() : session.brief();
+	if (log.length) {
+		console.log(log);
 	}
 	console.log(session.tally());
 });
