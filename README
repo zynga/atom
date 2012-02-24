@@ -37,7 +37,7 @@ a.once(['data_access', 'api_auth', 'document_ready'], function (dal, api, doc) {
 });
 
 // Register a listener to be called whenever a property changes
-a.bind('error', funtion (error) {
+a.on('error', funtion (error) {
 	console.log('There was a grevious calamity of code in ' + a.get('module'));
 	console.log(error);
 });
