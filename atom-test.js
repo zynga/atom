@@ -44,20 +44,20 @@ results = [];
 function aListener(a) {
 	results.push(a);
 }
-a.bind('a', aListener);
+a.on('a', aListener);
 a.set('a', 'A1');
-assert('bind() works when called with a single key', results + '' == 'A1');
+assert('on() works when called with a single key', results + '' == 'A1');
 
-a.bind(['b', 'c'], function (b, c) {
+a.on(['b', 'c'], function (b, c) {
 	results = results.concat([b, c]);
 });
 a.set('b', 'B1');
-assert('bind() works when called with a list', results + '' == 'A1,B1,C');
+assert('on() works when called with a list', results + '' == 'A1,B1,C');
 
 a.set('a', 'A2');
-a.unbind(aListener);
+a.off(aListener);
 a.set('a', 'A3');
-assert('unbind() prevents the function from being called again',
+assert('off() prevents the function from being called again',
 	results + '' == 'A1,B1,C,A2');
 
 results = [];

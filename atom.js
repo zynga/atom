@@ -4,7 +4,7 @@
 	// Establish the root object
 	var
 		root = this, // 'window' or 'global'
-		atom = { VERSION: '0.0.4' },
+		atom = { VERSION: '0.0.5' },
 		previous = root.atom
 	;
 	if (typeof module !== 'undefined' && module.exports) {
@@ -115,7 +115,7 @@
 
 			// Call `func` whenever any of the specified keys change.  The values
 			// of the keys will be provided as args to func.
-			bind: function (keyOrList, func) {
+			bind: function (keyOrList, func) { // alias: `on`
 				listeners.unshift({ keys: toArray(keyOrList), cb: func,
 					all: false, calls: Infinity });
 			},
@@ -307,7 +307,7 @@
 
 			// Unregister a listener `func` that was previously registered using
 			// `bind()`, `need()`, `next()` or `once()`.
-			unbind: function (func) {
+			unbind: function (func) { // alias: `off`
 				for (var i = listeners.length; --i >= 0;) {
 					if (listeners[i].cb === func) {
 						listeners.splice(i, 1);
@@ -315,6 +315,8 @@
 				}
 			}
 		};
+		me.on = me.bind;
+		me.off = me.unbind;
 		return me;
 	};
 
