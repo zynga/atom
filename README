@@ -1,7 +1,7 @@
 OVERVIEW:
 
 Atom.js is a small, easy to use JavaScript class that provides asynchronous
-control flow, property listeners, barriers, and more.
+control flow, event/property listeners, barriers, and more.
 
 
 FEATURES:
@@ -19,38 +19,45 @@ node atom-test.js -v   // verbose
 
 EXAMPLES:
 
-// Instanciate an atom
+// Instanciate an atom.
 var a = atom.create();
 
-// Set some arbitrary properties on the atom
+// Set some arbitrary properties on the atom.
 a.set({
 	color: 'fugilin',
 	spin: 1/3,
 	module: 'My Module'
 });
 
-// Register a listener to be called when a list of properties have been set
-a.once(['data_access', 'api_auth', 'document_ready'], function (dal, api, doc) {
-	api.selectColorTheme(a.get('color'));
-	api.showUI(doc);
-	a.set('initialized');
-});
+// Register listeners to be called...
 
-// Register a listener to be called whenever a property changes
+// ...whenever the property 'error' changes value.
 a.on('error', funtion (error) {
 	console.log('There was a grevious calamity of code in ' + a.get('module'));
 	console.log(error);
 });
 
-// String together a series of asynchronous functions
+// ...only once, and only when the named properties have been initially set.
+a.once(['data_access', 'api_auth', 'doc_ready'], function (dal, api, doc) {
+	api.selectColorTheme(a.get('color'));
+	api.showUI(doc);
+	a.set('initialized');
+});
+
+// ...only once, on the next change to the 'driving_coords' property.
+a.next('driving_coords', function (coords) {
+	console.log('Are we there yet?');
+});
+
+// String together a series of asynchronous functions.
 a.chain(
 	function (nextLink) {
-		callAjaxMethod('foo', function (result) {
-			nextLink(result);
+		callAjaxMethod('foo', function (fooResult) {
+			nextLink(fooResult);
 		});
 	},
-	function (nextLink, resultOfFoo) {
-		callAjaxMethod('bar', function (result) {
+	function (nextLink, fooResult) {
+		callAjaxMethod('bar', function (barResult) {
 			nextLink();
 		});
 	}
