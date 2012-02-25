@@ -1,4 +1,4 @@
-/*global atom, clock, console, require, test*/
+/*global atom:true, clock:true, console, require, test:true*/
 atom = typeof atom == 'undefined' ? require('./atom') : atom;
 clock = typeof clock == 'undefined' ? require('./clock/clock') : clock;
 test = typeof test == 'undefined' ? require('./test/test') : test;
