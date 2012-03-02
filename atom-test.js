@@ -260,10 +260,33 @@ a.set({ m: 'M1', n: 'N1' });
 assert('entangle() works for maps', results + '' == 'set,once,M1,N1');
 
 
-session.chain(function () {
-	var log = verbose ? session.log() : session.brief();
-	if (log.length) {
-		console.log(log);
+session.chain(
+	function (nextLink) {
+		var log = verbose ? session.log() : session.brief();
+		if (log.length) {
+			console.log(log);
+		}
+		console.log(session.tally());
+		nextLink();
+	},
+	function () {
+		var
+			num = 2000,
+			i = num,
+			arr = [],
+			set = function (i) {
+			},
+			start = new Date()
+		;
+		while (--i >= 0) {
+			arr.push('z' + i);
+		}
+		a.once(arr, function () {
+			console.log('Time to set ' + num + ' properties: ' +
+				(new Date() - start) + 'ms');
+		});
+		while (++i < num) {
+			a.set('z' + i);
+		}
 	}
-	console.log(session.tally());
-});
+);
