@@ -4,7 +4,7 @@
 	// Establish the root object
 	var
 		root = this, // 'window' or 'global'
-		atom = { VERSION: '0.0.5' },
+		atom = { VERSION: '0.0.6' },
 		previous = root.atom
 	;
 	if (typeof module !== 'undefined' && module.exports) {
@@ -35,19 +35,30 @@
 	function toArray(obj) {
 		return isArray(obj) ? obj : [obj];
 	}
+	function isEmpty(obj) {
+		for (var p in obj) {
+			if (obj.hasOwnProperty(p)) {
+				return false;
+			}
+		}
+		return true;
+	}
+
 
 	// Property getter
-	function get(nucleus, keyOrList, func, requireAll) {
+	function get(nucleus, keyOrList, func) {
 		var isList = isArray(keyOrList), keys = isList ? keyOrList : [keyOrList],
-			key, values = [], props = nucleus.props;
+			key, values = [], props = nucleus.props, missing = {},
+			result = { values: values };
 		for (var i = keys.length; --i >= 0;) {
 			key = keys[i];
-			if (requireAll && !props.hasOwnProperty(key)) {
-				return;
+			if (!props.hasOwnProperty(key)) {
+				result.missing = missing;
+				missing[key] = true;
 			}
 			values.unshift(props[key]);
 		}
-		return func ? func.apply({}, values) : isList ? values : values[0];
+		return func ? func.apply({}, values) : result;
 	}
 
 	function removeListener(listeners, listener) {
@@ -60,25 +71,30 @@
 
 	// Property setter
 	function set(nucleus, key, value) {
-		var keys, listener, listeners = nucleus.listeners,
-			listenersCopy = [].concat(listeners), requireAll, values,
+		var keys, listener, listeners = nucleus.listeners, values, missing,
+			listenersCopy = [].concat(listeners), i = listenersCopy.length,
 			props = nucleus.props, oldValue = props[key],
 			had = props.hasOwnProperty(key);
 		props[key] = value;
 		if (!had || oldValue !== value || (value && typeof value == 'object')) {
-			for (var i = listenersCopy.length; --i >= 0;) {
+			while (--i >= 0) {
 				listener = listenersCopy[i];
 				keys = listener.keys;
-				requireAll = listener.all;
-				if (inArray(keys, key)) {
-					values = get(nucleus, keys, null, requireAll);
-					if (values || !requireAll) {
-						listener.cb.apply({}, values);
-						listener.calls--;
+				missing = listener.missing;
+				if (missing) {
+					if (missing.hasOwnProperty(key)) {
+						delete missing[key];
+						if (isEmpty(missing)) {
+							listener.cb.apply({}, get(nucleus, keys).values);
+							listener.calls--;
+						}
 					}
-					if (!listener.calls) {
-						removeListener(listeners, listener);
-					}
+				} else if (inArray(keys, key)) {
+					listener.cb.apply({}, get(nucleus, keys).values);
+					listener.calls--;
+				}
+				if (!listener.calls) {
+					removeListener(listeners, listener);
 				}
 			}
 			delete nucleus.needs[key];
@@ -117,7 +133,7 @@
 			// of the keys will be provided as args to func.
 			bind: function (keyOrList, func) { // alias: `on`
 				listeners.unshift({ keys: toArray(keyOrList), cb: func,
-					all: false, calls: Infinity });
+					calls: Infinity });
 			},
 
 			// Add a function or functions to the async queue.  Functions added
@@ -198,7 +214,9 @@
 			// Get current values for the specified keys.  If `func` is provided,
 			// it will be called with the values as args.
 			get: function (keyOrList, func) {
-				return get(nucleus, keyOrList, func);
+				var result = get(nucleus, keyOrList, func);
+				return func ? result : typeof keyOrList == 'string' ?
+					result.values[0] : result.values;
 			},
 
 			// Returns true iff all of the specified keys exist (regardless of
@@ -261,7 +279,7 @@
 			// time, so it is guaranteed to be called no more than once.
 			next: function (keyOrList, func) {
 				listeners.unshift(
-					{ keys: toArray(keyOrList), cb: func, all: false, calls: 1 });
+					{ keys: toArray(keyOrList), cb: func, calls: 1 });
 			},
 
 			// Call `func` as soon as all of the specified keys have been set.  If
@@ -270,12 +288,14 @@
 			// than once.
 			once: function (keyOrList, func) {
 				var keys = toArray(keyOrList),
-					values = get(nucleus, keys, null, true);
-				if (values) {
+					results = get(nucleus, keys),
+					values = results.values,
+					missing = results.missing;
+				if (!missing) {
 					func.apply({}, values);
 				} else {
 					listeners.unshift(
-						{ keys: keys, cb: func, all: true, calls: 1 });
+						{ keys: keys, cb: func, missing: missing, calls: 1 });
 				}
 			},
 

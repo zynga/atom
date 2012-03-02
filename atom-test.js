@@ -271,7 +271,7 @@ session.chain(
 	},
 	function () {
 		var
-			num = 2000,
+			num = 10000,
 			i = num,
 			arr = [],
 			set = function (i) {
