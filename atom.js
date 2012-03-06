@@ -4,7 +4,7 @@
 	// Establish the root object
 	var
 		root = this, // 'window' or 'global'
-		atom = { VERSION: '0.0.6' },
+		atom = { VERSION: '0.0.7' },
 		previous = root.atom
 	;
 	if (typeof module !== 'undefined' && module.exports) {
@@ -20,7 +20,7 @@
 	// Convenience methods
 	var slice = Array.prototype.slice;
 	function isObject(obj) {
-		return typeof obj == 'object';
+		return typeof obj === 'object';
 	}
 	var isArray = Array.isArray || function (obj) {
 		return Object.prototype.toString.call(obj) === '[object Array]';
@@ -76,7 +76,7 @@
 			props = nucleus.props, oldValue = props[key],
 			had = props.hasOwnProperty(key);
 		props[key] = value;
-		if (!had || oldValue !== value || (value && typeof value == 'object')) {
+		if (!had || oldValue !== value || (value && typeof value === 'object')) {
 			while (--i >= 0) {
 				listener = listenersCopy[i];
 				keys = listener.keys;
@@ -215,7 +215,7 @@
 			// it will be called with the values as args.
 			get: function (keyOrList, func) {
 				var result = get(nucleus, keyOrList, func);
-				return func ? result : typeof keyOrList == 'string' ?
+				return func ? result : typeof keyOrList === 'string' ?
 					result.values[0] : result.values;
 			},
 
