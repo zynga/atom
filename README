@@ -6,7 +6,7 @@ control flow, event/property listeners, barriers, and more.
 
 FEATURES:
 
- - Under 9K (under 3K minified).
+ - Only 9.3K (3K minified).
  - Works in a browser or in node.
  - No dependencies (except for running unit tests)
 
