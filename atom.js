@@ -1,21 +1,24 @@
-/*global module*/
+/*global global, module*/
 (function () {
 
-	// Establish the root object
-	var
-		root = this, // 'window' or 'global'
-		atom = { VERSION: '0.0.7' },
-		previous = root.atom
-	;
-	if (typeof module !== 'undefined' && module.exports) {
-		module.exports = atom;
-	}
-	root.atom = atom;
+	// Make a module
+	var atom = (function (name) {
+		var rt = typeof window !== 'undefined' ? window : global,
+			had = rt.hasOwnProperty(name), prev = rt[name], me = rt[name] = {};
+		if (typeof module !== 'undefined' && module.exports) {
+			module.exports = me;
+		}
+		me.noConflict = function () {
+			delete rt[name];
+			if (had) {
+				rt[name] = prev;
+			}
+			return this;
+		};
+		return me;
+	}('atom'));
 
-	atom.noConflict = function () {
-		root.atom = previous;
-		return this;
-	};
+	atom.VERSION = '0.0.8';
 
 	// Convenience methods
 	var slice = Array.prototype.slice;
