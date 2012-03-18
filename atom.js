@@ -18,13 +18,10 @@
 		return me;
 	}('atom'));
 
-	atom.VERSION = '0.0.8';
+	atom.VERSION = '0.1.0';
 
 	// Convenience methods
 	var slice = Array.prototype.slice;
-	function isObject(obj) {
-		return typeof obj === 'object';
-	}
 	var isArray = Array.isArray || function (obj) {
 		return Object.prototype.toString.call(obj) === '[object Array]';
 	};
@@ -72,14 +69,21 @@
 		}
 	}
 
+	// Used to detect listener recursion; a given object may only appear once.
+	var objStack = [];
+
 	// Property setter
 	function set(nucleus, key, value) {
 		var keys, listener, listeners = nucleus.listeners, values, missing,
 			listenersCopy = [].concat(listeners), i = listenersCopy.length,
 			props = nucleus.props, oldValue = props[key],
-			had = props.hasOwnProperty(key);
+			had = props.hasOwnProperty(key),
+			isObj = value && typeof value === 'object';
 		props[key] = value;
-		if (!had || oldValue !== value || (value && typeof value === 'object')) {
+		if (!had || oldValue !== value || (isObj && !inArray(objStack, value))) {
+			if (isObj) {
+				objStack.push(value);
+			}
 			while (--i >= 0) {
 				listener = listenersCopy[i];
 				keys = listener.keys;
@@ -101,6 +105,9 @@
 				}
 			}
 			delete nucleus.needs[key];
+			if (isObj) {
+				objStack.pop();
+			}
 		}
 	}
 
@@ -186,7 +193,7 @@
 			entangle: function (otherAtom, keyOrListOrMap) {
 				var
 					isList = isArray(keyOrListOrMap),
-					isMap = !isList && isObject(keyOrListOrMap),
+					isMap = !isList && typeof keyOrListOrMap === 'object',
 					i, key,
 					keys = isList ? keyOrListOrMap : isMap ? [] : [keyOrListOrMap],
 					map = isMap ? keyOrListOrMap : {}
@@ -317,7 +324,7 @@
 			// Set value for a key, or if `keyOrMap` is an object then set all the
 			// keys' corresponding values.
 			set: function (keyOrMap, value) {
-				if (isObject(keyOrMap)) {
+				if (typeof keyOrMap === 'object') {
 					for (var key in keyOrMap) {
 						if (keyOrMap.hasOwnProperty(key)) {
 							set(nucleus, key, keyOrMap[key]);

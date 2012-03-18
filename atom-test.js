@@ -248,17 +248,23 @@ a.set({ f: 'F1', g: 'G1' });
 assert('entangle() works for a list of keys', results + '' === 'set,once,F1,G1');
 
 results = [];
-a.entangle(otherAtom, {
-	m: 'oM',
-	n: 'oN'
-});
+a.entangle(otherAtom, { m: 'oM', n: 'oN' });
 otherAtom.once(['oM', 'oN'], function (oM, oN) {
 	results = results.concat(['once', oM, oN]);
 });
 results.push('set');
 a.set({ m: 'M1', n: 'N1' });
-assert('entangle() works for maps', results + '' === 'set,once,M1,N1');
+assert('entangle() works for maps passed to set()',
+	results + '' === 'set,once,M1,N1');
 
+results = [];
+a.entangle(otherAtom, 'object');
+otherAtom.once('object', function (object) {
+	results.push(object.a);
+	results.push(object.b);
+});
+a.set('object', { a: 'A', b: 'B' });
+assert('entangle() works for object values', results + '' === 'A,B');
 
 session.chain(
 	function (nextLink) {
