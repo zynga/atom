@@ -97,7 +97,7 @@ method.
 
 You can unregister any listener using `.off()` (alias `.unbind()`).
 
-	a.off('error, myErrorHandler);
+	a.off('error', myErrorHandler);
 
 
 ### Needs and Providers
