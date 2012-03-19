@@ -23,37 +23,106 @@ UNIT TESTS
 EXAMPLES
 --------
 
-	// Instanciate an atom.
+This is `a`.
+
+	var a
+
+`a` is an atom.
+
 	var a = atom.create();
 
-	// Set some arbitrary properties on the atom.
+
+#### Properties
+
+An atom has properties.  The `.get()` and `.set()` methods may be employed to
+read and write values of any type.
+
 	a.set({
-		color: 'fugilin',
-		spin: 1/3,
-		module: 'My Module'
+		pi: 3.141592653,
+		r: 5,
+		circ: function () {
+			return 2 * a.get('pi') * a.get('r');
+		}
+	});
+	console.log('Circumference: ' + a.get('circ')());
+
+Use `.has()` to query for existence of a property, and `.keys()` to get a list
+of all properties that have been set.
+
+	if (a.has('game')) {
+		console.log('What a brings to the table: ' + a.keys());
+	}
+
+The `.each()` method lets you execute a function on a series of properties.
+
+	a.set({ r: 0xBA, g: 0xDA, b: 0x55 });
+	a.each(['r', 'g', 'b'], function (key, value) {
+		console.log(key + ': ' + value);
 	});
 
-	// Register listeners to be called...
 
-	// ...whenever the property 'error' changes value.
-	a.on('error', funtion (error) {
+#### Listeners
+
+Listeners may be attached to atoms in a variety of ways.
+
+To be notified as soon as a property is set, use the `.once()` method.
+
+	a.once('userInfo', function (userInfo) {
+		alert('Welcome, ' + userInfo.name + '!');
+	});
+
+Many atom methods can work with more than one property at a time.
+
+	a.once(['userInfo', 'appInfo'], function (user, app) {
+		alert('Welcome to ' + app.name + ', ' + user.name + '!');
+	});
+
+When you just want to know about the next change, even if the property is
+already set, use `.next()`.
+
+	a.next('click', function (click) {
+		alert('Are you done clicking on ' + click.button + ' yet?');
+	});
+
+To watch for any future changes to a property, use the `.on()` (alias `.bind()`)
+method.
+
+	function myErrorHandler(error) {
 		console.log('There was a grevious calamity of code in ' + a.get('module'));
 		console.log(error);
+	}
+	a.on('error', myErrorHandler);
+
+You can unregister any listener using `.off()` (alias `.unbind()`).
+
+	a.off('error, myErrorHandler);
+
+
+#### Needs and Providers
+
+You can register a provider for a property.
+
+	a.provide('privacyPolicy', function (done) {
+		httpRequest(baseUrl + '/privacy.txt', function (content) {
+			done(content);
+		});
 	});
 
-	// ...only once, and only when the named properties have been initially set.
-	a.once(['data_access', 'api_auth', 'doc_ready'], function (dal, api, doc) {
-		api.selectColorTheme(a.get('color'));
-		api.showUI(doc);
-		a.set('initialized');
+Providers only get invoked if there is a need, and if the property is not
+already set.  Use the `.need()` method to declare a need for a particular
+property.  If a corresponding provider is registered, it will be invoked.
+
+	a.on('clickPrivacy', function () {
+		a.need('privacyPolicy', function (text) {
+			element.innerText = text;
+		});
 	});
 
-	// ...only once, on the next change to the 'driving_coords' property.
-	a.next('driving_coords', function (coords) {
-		console.log('Are we there yet?');
-	});
 
-	// String together a series of asynchronous functions.
+#### Asynchronous Queueing
+
+String together a series of asynchronous functions using the `.chain()` method.
+
 	a.chain(
 		function (nextLink) {
 			callAjaxMethod('foo', function (fooResult) {
@@ -66,3 +135,11 @@ EXAMPLES
 			});
 		}
 	);
+
+
+#### Cleanup
+
+Release references to all data and callback functions with the `.destroy()`
+method.
+
+	a.destroy();
