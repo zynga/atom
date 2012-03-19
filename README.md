@@ -8,14 +8,15 @@ control flow, event/property listeners, barriers, and more.
 FEATURES
 --------
 
- - Under 9K (under 3K minified).
- - Works in a browser or in node.
- - No dependencies (except for running unit tests)
-
+ - Small: ~9.6K (~3K minified).
+ - No dependencies: works in a browser, or in node.
+ - Enables programming patterns that reduce the need for deeply nested
+   callbacks and conditionals.
 
 UNIT TESTS
 ----------
 
+	git submodule update --init
 	node atom-test.js      // brief
 	node atom-test.js -v   // verbose
 
@@ -32,7 +33,7 @@ This is `a`.
 	var a = atom.create();
 
 
-#### Properties
+### Properties
 
 An atom has properties.  The `.get()` and `.set()` methods may be employed to
 read and write values of any type.
@@ -61,7 +62,7 @@ The `.each()` method lets you execute a function on a series of properties.
 	});
 
 
-#### Listeners
+### Listeners
 
 Listeners may be attached to atoms in a variety of ways.
 
@@ -98,7 +99,7 @@ You can unregister any listener using `.off()` (alias `.unbind()`).
 	a.off('error, myErrorHandler);
 
 
-#### Needs and Providers
+### Needs and Providers
 
 You can register a provider for a property.
 
@@ -119,19 +120,19 @@ property.  If a corresponding provider is registered, it will be invoked.
 	});
 
 
-#### Asynchronous Queueing
+### Asynchronous Queueing
 
 String together a series of asynchronous functions using the `.chain()` method.
 
 	a.chain(
 		function (nextLink) {
-			callAjaxMethod('foo', function (fooResult) {
-				nextLink(fooResult);
+			callAjaxMethod('callThisFirst', function (firstResult) {
+				nextLink(firstResult);
 			});
 		},
-		function (nextLink, fooResult) {
-			callAjaxMethod('bar', function (barResult) {
-				nextLink();
+		function (nextLink, firstResult) {
+			callAjaxMethod('callThisSecond', function (secondResult) {
+				nextLink(secondResult);
 			});
 		}
 	);
