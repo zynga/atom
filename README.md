@@ -21,7 +21,7 @@ UNIT TESTS
 	node atom-test.js -v   // verbose
 
 
-EXAMPLES
+TUTORIAL
 --------
 
 This is `a`.
