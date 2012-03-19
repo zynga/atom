@@ -138,7 +138,7 @@ String together a series of asynchronous functions using the `.chain()` method.
 	);
 
 
-#### Cleanup
+### Cleanup
 
 Release references to all data and callback functions with the `.destroy()`
 method.
