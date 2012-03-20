@@ -52,7 +52,7 @@ Use `.has()` to query for existence of a property, and `.keys()` to get a list
 of all properties that have been set.
 
 	if (a.has('game')) {
-		console.log('What a brings to the table: ' + a.keys());
+		console.log('What "a" brings to the table: ' + a.keys());
 	}
 
 The `.each()` method lets you execute a function on a series of properties.
