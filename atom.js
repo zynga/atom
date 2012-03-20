@@ -18,7 +18,8 @@
 		return me;
 	}('atom'));
 
-	atom.VERSION = '0.1.0';
+	atom.VERSION = '0.1.1';
+
 
 	// Convenience methods
 	var slice = Array.prototype.slice;
@@ -61,13 +62,18 @@
 		return func ? func.apply({}, values) : result;
 	}
 
-	function removeListener(listeners, listener) {
+
+	// Helper to remove an exausted listener from the listeners array
+	function removeListener(listeners) {
 		for (var i = listeners.length; --i >= 0;) {
+			// There should only be ONE exhausted listener, so we don't bother
+			// comparing it to the 'listener' parameter.
 			if (!listeners[i].calls) {
 				return listeners.splice(i, 1);
 			}
 		}
 	}
+
 
 	// Used to detect listener recursion; a given object may only appear once.
 	var objStack = [];
@@ -101,7 +107,7 @@
 					listener.calls--;
 				}
 				if (!listener.calls) {
-					removeListener(listeners, listener);
+					removeListener(listeners);
 				}
 			}
 			delete nucleus.needs[key];
@@ -111,11 +117,13 @@
 		}
 	}
 
+
 	function provide(nucleus, key, provider) {
 		provider(function (result) {
 			set(nucleus, key, result);
 		});
 	}
+
 
 	atom.create = function () {
 		var
@@ -126,6 +134,7 @@
 			listeners = nucleus.listeners,
 			q = []
 		;
+
 		function doNext() {
 			if (q) {
 				q.pending = q.next = (!q.next && q.length) ?
@@ -137,6 +146,7 @@
 				}
 			}
 		}
+
 		var me = {
 
 			// Call `func` whenever any of the specified keys change.  The values
