@@ -66,8 +66,7 @@
 	// Helper to remove an exausted listener from the listeners array
 	function removeListener(listeners) {
 		for (var i = listeners.length; --i >= 0;) {
-			// There should only be ONE exhausted listener, so we don't bother
-			// comparing it to the 'listener' parameter.
+			// There should only be ONE exhausted listener.
 			if (!listeners[i].calls) {
 				return listeners.splice(i, 1);
 			}
