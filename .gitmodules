@@ -1,6 +1,0 @@
-[submodule "test"]
-	path = test
-	url = git@github-ca.corp.zynga.com:ccampbell/test.git
-[submodule "clock"]
-	path = clock
-	url = git@github-ca.corp.zynga.com:ccampbell/clock.git

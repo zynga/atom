@@ -1,17 +1,27 @@
-/*global atom:true, clock:true, console, process, require, test:true*/
+/*global atom:true, console, process, require*/
 atom = typeof atom === 'undefined' ? require('./atom') : atom;
-clock = typeof clock === 'undefined' ? require('./clock/clock') : clock;
-test = typeof test === 'undefined' ? require('./test/test') : test;
 
 var
 	argv = process.argv,
 	arg2 = argv.length > 2 && argv[2],
 	verbose = arg2 === '-v',
 	a = atom.create(),
-	session = test.session(),
-	assert = session.assert,
-	results = []
+	results = [],
+	totals = { success: 0, fail: 0, total: 0 }
 ;
+
+function assert(msg, success) {
+	totals.total++;
+	if (success) {
+		totals.success++;
+		if (verbose) {
+			console.log(msg + '... success.');
+		}
+	} else {
+		totals.fail++;
+		console.log(msg + '... FAIL!');
+	}
+}
 
 a.set('a', 'A');
 assert('get() returns a single value', a.get('a') === 'A');
@@ -266,32 +276,25 @@ otherAtom.once('object', function (object) {
 a.set('object', { a: 'A', b: 'B' });
 assert('entangle() works for object values', results + '' === 'A,B');
 
-session.chain(
-	function (nextLink) {
-		var log = verbose ? session.log() : session.brief();
-		if (log.length) {
-			console.log(log);
-		}
-		console.log(session.tally());
-		nextLink();
-	},
-	function () {
-		var
-			num = 10000,
-			i = num,
-			arr = [],
-			set = function (i) { },
-			start = new Date()
-		;
-		while (--i >= 0) {
-			arr.push('z' + i);
-		}
-		a.once(arr, function () {
-			console.log('Time to set ' + num + ' properties: ' +
-				(new Date() - start) + 'ms');
-		});
-		while (++i < num) {
-			a.set('z' + i);
-		}
+
+console.log(totals);
+
+(function () {
+	var
+		num = 10000,
+		i = num,
+		arr = [],
+		set = function (i) { },
+		start = new Date()
+	;
+	while (--i >= 0) {
+		arr.push('z' + i);
 	}
-);
+	a.once(arr, function () {
+		console.log('Time to set ' + num + ' properties: ' +
+			(new Date() - start) + 'ms');
+	});
+	while (++i < num) {
+		a.set('z' + i);
+	}
+}());

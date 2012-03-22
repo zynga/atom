@@ -17,7 +17,6 @@ FEATURES
 UNIT TESTS
 ==========
 
-	git submodule update --init
 	node atom-test.js      // brief
 	node atom-test.js -v   // verbose
 

@@ -18,7 +18,7 @@
 		return me;
 	}('atom'));
 
-	atom.VERSION = '0.1.1';
+	atom.VERSION = '0.2.0';
 
 
 	// Convenience methods
