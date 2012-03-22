@@ -130,7 +130,7 @@ instantly propagate to the other.
 	var b = atom.create();
 	a.entangle(b, 'email');
 	a.set('email', 'ccampbell@zynga.com');
-	alert('Entangled email: ' + b.get('email');
+	console.log('Entangled email: ' + b.get('email'));
 
 `.entangle()` also works when called with a list of properties.
 
@@ -141,7 +141,7 @@ entangled with property 'Y' on the other atom.
 
 	a.entangle(b, { firstname: 'first', lastname: 'last' });
 	a.set('firstname', 'Chris');
-	alert('Welcome, ' + b.get('first'));
+	console.log('Welcome, ' + b.get('first'));
 
 
 ### Asynchronous Queueing
