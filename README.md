@@ -112,6 +112,7 @@ You can register a provider for a property.
 Providers only get invoked if there is a need, and if the property is not
 already set.  Use the `.need()` method to declare a need for a particular
 property.  If a corresponding provider is registered, it will be invoked.
+Otherwise, `.need()` behaves just like `.once()`.
 
 	a.on('clickPrivacy', function () {
 		a.need('privacyPolicy', function (text) {
