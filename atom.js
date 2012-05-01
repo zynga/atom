@@ -10,16 +10,19 @@
 			module.exports = me;
 		}
 		me.noConflict = function () {
-			delete root[name];
-			if (had) {
-				root[name] = prev;
+			root[name] = had ? prev : undefined;
+			if (!had) {
+				try {
+					delete root[name];
+				} catch (ex) {
+				}
 			}
 			return this;
 		};
 		return me;
 	}('atom'));
 
-	atom.VERSION = '0.2.1';
+	atom.VERSION = '0.2.2';
 
 
 	// Convenience methods
