@@ -129,7 +129,7 @@ instantly propagate to the other.
 
 	var b = atom.create();
 	a.entangle(b, 'email');
-	a.set('email', 'ccampbell@zynga.com');
+	a.set('email', 'someone@example.com');
 	console.log('Entangled email: ' + b.get('email'));
 
 `.entangle()` also works when called with a list of properties.
@@ -140,7 +140,7 @@ If called with a map of property names, then property 'X' on one atom can be
 entangled with property 'Y' on the other atom.
 
 	a.entangle(b, { firstname: 'first', lastname: 'last' });
-	a.set('firstname', 'Chris');
+	a.set('firstname', 'Joe');
 	console.log('Welcome, ' + b.get('first'));
 
 Note that entangled properties are not actually synchronized until the first
