@@ -143,6 +143,9 @@ entangled with property 'Y' on the other atom.
 	a.set('firstname', 'Chris');
 	console.log('Welcome, ' + b.get('first'));
 
+Note that entangled properties are not actually synchronized until the first
+change *after* entanglement.
+
 
 ### Asynchronous Queueing
 

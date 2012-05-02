@@ -22,7 +22,7 @@
 		return me;
 	}('atom'));
 
-	atom.VERSION = '0.2.2';
+	atom.VERSION = '0.3.0';
 
 
 	// Convenience methods
@@ -121,6 +121,7 @@
 	}
 
 
+	// Helper function for setting up providers.
 	function provide(nucleus, key, provider) {
 		provider(function (result) {
 			set(nucleus, key, result);
@@ -128,6 +129,7 @@
 	}
 
 
+	// Return an actual instance.
 	atom.create = function () {
 		var
 			nucleus = { props: {}, needs: {}, providers: {}, listeners: [] },
@@ -138,6 +140,7 @@
 			q = []
 		;
 
+		// Execute the next function in the async queue.
 		function doNext() {
 			if (q) {
 				q.pending = q.next = (!q.next && q.length) ?
@@ -151,13 +154,6 @@
 		}
 
 		var me = {
-
-			// Call `func` whenever any of the specified keys change.  The values
-			// of the keys will be provided as args to func.
-			bind: function (keyOrList, func) { // alias: `on`
-				listeners.unshift({ keys: toArray(keyOrList), cb: func,
-					calls: Infinity });
-			},
 
 			// Add a function or functions to the async queue.  Functions added
 			// thusly must call their first arg as a callback when done.  Any args
@@ -202,7 +198,8 @@
 			// different atoms, so that changing a property on either atom will
 			// propagate to the other.  If a map is provided for `keyOrListOrMap`,
 			// properties on this atom may be bound to differently named properties
-			// on `otherAtom`.
+			// on `otherAtom`.  Note that entangled properties will not actually be
+			// synchronized until the first change *after* entanglement.
 			entangle: function (otherAtom, keyOrListOrMap) {
 				var
 					isList = isArray(keyOrListOrMap),
@@ -305,6 +302,23 @@
 					{ keys: toArray(keyOrList), cb: func, calls: 1 });
 			},
 
+			// Unregister a listener `func` that was previously registered using
+			// `on()`, `bind()`, `need()`, `next()` or `once()`.
+			off: function (func) { // alias: `unbind`
+				for (var i = listeners.length; --i >= 0;) {
+					if (listeners[i].cb === func) {
+						listeners.splice(i, 1);
+					}
+				}
+			},
+
+			// Call `func` whenever any of the specified keys change.  The values
+			// of the keys will be provided as args to func.
+			on: function (keyOrList, func) { // alias: `bind`
+				listeners.unshift({ keys: toArray(keyOrList), cb: func,
+					calls: Infinity });
+			},
+
 			// Call `func` as soon as all of the specified keys have been set.  If
 			// they are already set, the function will be called immediately, with
 			// all the values provided as args.  Guaranteed to be called no more
@@ -346,20 +360,10 @@
 				} else {
 					set(nucleus, keyOrMap, value);
 				}
-			},
-
-			// Unregister a listener `func` that was previously registered using
-			// `bind()`, `need()`, `next()` or `once()`.
-			unbind: function (func) { // alias: `off`
-				for (var i = listeners.length; --i >= 0;) {
-					if (listeners[i].cb === func) {
-						listeners.splice(i, 1);
-					}
-				}
 			}
 		};
-		me.on = me.bind;
-		me.off = me.unbind;
+		me.bind = me.on;
+		me.unbind = me.off;
 		return me;
 	};
 
