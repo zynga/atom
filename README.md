@@ -8,7 +8,7 @@ control flow, event/property listeners, barriers, and more.
 FEATURES
 ========
 
- - Small: ~9.6K (~3K minified).
+ - Small: ~10K (~3K minified).
  - No dependencies: works in a browser, or in node.
  - Enables programming patterns that reduce the need for deeply nested
    callbacks and conditionals.
