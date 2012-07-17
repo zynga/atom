@@ -22,7 +22,7 @@
 		return me;
 	}('atom'));
 
-	atom.VERSION = '0.3.0';
+	atom.VERSION = '0.3.1';
 
 
 	// Convenience methods
@@ -164,7 +164,7 @@
 					for (var i = 0, len = arguments.length; i < len; i++) {
 						q.push(arguments[i]);
 						if (!q.pending) {
-							doNext.apply({}, q.args);
+							doNext.apply({}, q.args || []);
 						}
 					}
 				}
