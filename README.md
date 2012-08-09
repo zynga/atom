@@ -17,8 +17,12 @@ FEATURES
 UNIT TESTS
 ==========
 
-	node atom-test.js      // brief
-	node atom-test.js -v   // verbose
+To run from command line using node.js:
+
+	node test.js      // brief
+	node test.js -v   // verbose
+
+To run in a browser, open `test.html`.
 
 
 TUTORIAL

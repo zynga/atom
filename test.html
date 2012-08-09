@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<title>atom.js tests</title>
+
+	<script type="text/javascript" src="atom.js"></script>
+	<script type="text/javascript">
+		var queue = [];
+
+		function onReady(callback) {
+			if (document.readyState === 'complete') {
+				callback();
+			} else {
+				queue.push(callback);
+			}
+		}
+
+		function purgeQueue() {
+			while (queue.length) {
+				queue.shift()();
+			}
+		}
+
+		if (window.addEventListener) {
+			window.addEventListener('load', purgeQueue);
+		} else {
+			window.attachEvent('onload', purgeQueue);
+		}
+
+		function addText(msg) {
+			onReady(function () {
+				document.getElementById('console')
+					.appendChild(document.createTextNode(msg + '\n'));
+			});
+		}
+
+		function logObj(obj) {
+			for (var p in obj) {
+				if (obj.hasOwnProperty(p)) {
+					addText(p + ': ' + obj[p]);
+				}
+			}
+		}
+
+		function logger(obj) {
+			if (typeof console !== 'undefined' && console.log) {
+				console.log(obj);
+			}
+			if (obj && typeof obj === 'object') {
+				logObj(obj);
+			} else {
+				addText(obj + '');
+			}
+		}
+	</script>
+	<script type="text/javascript" src="test.js"></script>
+</head>
+
+<body>
+	<pre id="console"></pre>
+</body>
+
+</html>
