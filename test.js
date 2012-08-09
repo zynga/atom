@@ -1,25 +1,30 @@
-/*global atom:true, console, process, require*/
+/*global atom:true, logger:true, process, require*/
 atom = typeof atom === 'undefined' ? require('./atom') : atom;
 
 var
-	argv = process.argv,
-	arg2 = argv.length > 2 && argv[2],
-	verbose = arg2 === '-v',
+	inBrowser = typeof document !== 'undefined',
+	inNode = !inBrowser,
+	argv = inNode && process.argv,
+	arg2 = argv && argv.length > 2 && argv[2],
+	verbose = inBrowser || arg2 === '-v',
 	a = atom.create(),
 	results = [],
 	totals = { success: 0, fail: 0, total: 0 }
 ;
+
+
+logger = (typeof logger !== 'undefined' && logger) || console.log;
 
 function assert(msg, success) {
 	totals.total++;
 	if (success) {
 		totals.success++;
 		if (verbose) {
-			console.log(msg + '... success.');
+			logger(msg + '... success.');
 		}
 	} else {
 		totals.fail++;
-		console.log(msg + '... FAIL!');
+		logger(msg + '... FAIL!');
 	}
 }
 
@@ -277,24 +282,25 @@ a.set('object', { a: 'A', b: 'B' });
 assert('entangle() works for object values', results + '' === 'A,B');
 
 
-console.log(totals);
+logger(totals);
 
-(function () {
+setTimeout(function () {
 	var
 		num = 10000,
 		i = num,
 		arr = [],
-		set = function (i) { },
+		set = a.set,
 		start = new Date()
 	;
 	while (--i >= 0) {
 		arr.push('z' + i);
 	}
 	a.once(arr, function () {
-		console.log('Time to set ' + num + ' properties: ' +
+		logger('Time to set ' + num + ' properties: ' +
 			(new Date() - start) + 'ms');
 	});
 	while (++i < num) {
-		a.set('z' + i);
+		set('z' + i);
 	}
-}());
+	logger('END');
+}, 100);
