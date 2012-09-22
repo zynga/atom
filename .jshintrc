@@ -7,26 +7,20 @@
     // Predefined globals whom JSHint will ignore.
     "browser"       : true,   // Standard browser globals e.g. `window`, `document`.
 
-    "node"          : false,
+    "node"          : true,
     "rhino"         : false,
     "couch"         : false,
     "wsh"           : true,   // Windows Scripting Host.
 
-    "jquery"        : true,
+    "jquery"        : false,
     "prototypejs"   : false,
     "mootools"      : false,
     "dojo"          : false,
 
-    "predef"        : [  // Custom globals.
-        //"exampleVar",
-        //"anotherCoolGlobal",
-        //"iLoveDouglas"
-    ],
-
 
     // Development.
     "debug"         : false,  // Allow debugger statements e.g. browser breakpoints.
-    "devel"         : true,   // Allow developments statements e.g. `console.log();`.
+    "devel"         : false,  // Allow developments statements e.g. `console.log();`.
 
 
     // ECMAScript 5.
