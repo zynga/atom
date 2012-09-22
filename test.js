@@ -165,6 +165,15 @@ assert('set() takes it in stride when the listener list is synchronously ' +
 	'modified by one of the listeners', results + '' === 'setX,x=y,setX1,x1=y1');
 
 results = ['need'];
+a.need('d0');
+a.provide('d0', function (done) {
+	results = results.concat(['provider']);
+	done(1);
+});
+assert('need() can be called with no callback, to invoke the provider',
+	results + '' === 'need,provider');
+
+results = ['need'];
 a.need('d', function (d) {
 	results = results.concat(['satisfy', d]);
 });

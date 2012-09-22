@@ -1,5 +1,5 @@
-/*global global, module*/
 (function () {
+	"use strict";
 
 	// Make a module
 	var atom = (function (name) {
@@ -22,7 +22,7 @@
 		return me;
 	}('atom'));
 
-	atom.VERSION = '0.3.1';
+	atom.VERSION = '0.3.2';
 
 
 	// Convenience methods
@@ -290,7 +290,9 @@
 						needs[key] = true;
 					}
 				}
-				me.once(keys, func);
+				if (func) {
+					me.once(keys, func);
+				}
 			},
 
 			// Call `func` whenever any of the specified keys is next changed.  The
