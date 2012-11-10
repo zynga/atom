@@ -1,11 +1,11 @@
-OVERVIEW
+Overview
 ========
 
 Atom.js is a small, easy to use JavaScript class that provides asynchronous
 control flow, event/property listeners, barriers, and more.
 
 
-FEATURES
+Features
 ========
 
  - Small: ~10K (~3K minified).
@@ -14,7 +14,13 @@ FEATURES
    callbacks and conditionals.
 
 
-UNIT TESTS
+Install
+=======
+
+	npm install atom-js
+
+
+Unit Tests
 ==========
 
 To run from command line using node.js:
@@ -25,7 +31,7 @@ To run from command line using node.js:
 To run in a browser, open `test.html`.
 
 
-TUTORIAL
+Tutorial
 ========
 
 This is `a`.
