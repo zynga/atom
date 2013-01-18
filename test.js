@@ -7,7 +7,7 @@ var
 	argv = inNode && process.argv,
 	arg2 = argv && argv.length > 2 && argv[2],
 	verbose = inBrowser || arg2 === '-v',
-	a = atom.create(),
+	a = atom(),
 	results = [],
 	totals = { success: 0, fail: 0, total: 0 }
 ;
@@ -253,7 +253,7 @@ a.each(['a', 'b', 'd', 'c'], function (name, val) {
 assert('each() works', results + '' === 'a=A4,b=B1,d=D,c=C1');
 
 results = [];
-var otherAtom = atom.create();
+var otherAtom = atom();
 a.entangle(otherAtom, 'e');
 a.next('e', function (e) {
 	results = results.concat(['next', e]);

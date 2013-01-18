@@ -40,7 +40,7 @@ This is `a`.
 
 `a` is an atom.
 
-	var a = atom.create();
+	var a = atom();
 
 
 ### Properties
@@ -141,7 +141,7 @@ Properties of two or more atoms can be entangled, using the `.entangle()`
 method.  When an entangled property gets set on one atom, the value will
 instantly propagate to the other.
 
-	var b = atom.create();
+	var b = atom();
 	a.entangle(b, 'email');
 	a.set('email', 'someone@example.com');
 	console.log('Entangled email: ' + b.get('email'));

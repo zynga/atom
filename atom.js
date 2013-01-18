@@ -1,36 +1,27 @@
-(function () {
-	"use strict";
+(function (undef) {
+	'use strict';
 
-	// Make a module
-	var atom = (function (name) {
-		var root = typeof window !== 'undefined' ? window : global,
-			had = Object.prototype.hasOwnProperty.call(root, name),
-			prev = root[name], me = root[name] = {};
-		if (typeof module !== 'undefined' && module.exports) {
-			module.exports = me;
-		}
-		me.noConflict = function () {
-			if (root[name] === me) {
-				root[name] = had ? prev : undefined;
-				if (!had) {
-					try {
-						delete root[name];
-					} catch (ex) {
-					}
-				}
-			}
-			return me;
-		};
-		return me;
-	}('atom'));
+	var
+		atom,
+		name = 'atom',
+		VERSION = '0.4.0',
 
-	atom.VERSION = '0.3.3';
+		ObjProto = Object.prototype,
+		hasOwn = ObjProto.hasOwnProperty,
+
+		typeObj = 'object',
+		typeUndef = 'undefined',
+
+		root = typeof window !== typeUndef ? window : global,
+		had = hasOwn.call(root, name),
+		prev = root[name]
+	;
 
 
 	// Convenience methods
 	var slice = Array.prototype.slice;
 	var isArray = Array.isArray || function (obj) {
-		return Object.prototype.toString.call(obj) === '[object Array]';
+		return ObjProto.toString.call(obj) === '[object Array]';
 	};
 	function inArray(arr, value) {
 		for (var i = arr.length; --i >= 0;) {
@@ -44,7 +35,7 @@
 	}
 	function isEmpty(obj) {
 		for (var p in obj) {
-			if (obj.hasOwnProperty(p)) {
+			if (hasOwn.call(obj, p)) {
 				return false;
 			}
 		}
@@ -59,7 +50,7 @@
 			result = { values: values };
 		for (var i = keys.length; --i >= 0;) {
 			key = keys[i];
-			if (!props.hasOwnProperty(key)) {
+			if (!hasOwn.call(props, key)) {
 				result.missing = missing;
 				missing[key] = true;
 			}
@@ -88,8 +79,8 @@
 		var keys, listener, listeners = nucleus.listeners, values, missing,
 			listenersCopy = [].concat(listeners), i = listenersCopy.length,
 			props = nucleus.props, oldValue = props[key],
-			had = props.hasOwnProperty(key),
-			isObj = value && typeof value === 'object';
+			had = hasOwn.call(props, key),
+			isObj = value && typeof value === typeObj;
 		props[key] = value;
 		if (!had || oldValue !== value || (isObj && !inArray(objStack, value))) {
 			if (isObj) {
@@ -100,7 +91,7 @@
 				keys = listener.keys;
 				missing = listener.missing;
 				if (missing) {
-					if (missing.hasOwnProperty(key)) {
+					if (hasOwn.call(missing, key)) {
 						delete missing[key];
 						if (isEmpty(missing)) {
 							listener.cb.apply({}, get(nucleus, keys).values);
@@ -131,8 +122,8 @@
 	}
 
 
-	// Return an actual instance.
-	atom.create = function () {
+	// Return an instance.
+	atom = root[name] = function () {
 		var
 			nucleus = { props: {}, needs: {}, providers: {}, listeners: [] },
 			props = nucleus.props,
@@ -205,14 +196,14 @@
 			entangle: function (otherAtom, keyOrListOrMap) {
 				var
 					isList = isArray(keyOrListOrMap),
-					isMap = !isList && typeof keyOrListOrMap === 'object',
+					isMap = !isList && typeof keyOrListOrMap === typeObj,
 					i, key,
 					keys = isList ? keyOrListOrMap : isMap ? [] : [keyOrListOrMap],
 					map = isMap ? keyOrListOrMap : {}
 				;
 				if (isMap) {
 					for (key in map) {
-						if (map.hasOwnProperty(key)) {
+						if (hasOwn.call(map, key)) {
 							keys.push(key);
 						}
 					}
@@ -246,7 +237,7 @@
 			has: function (keyOrList) {
 				var keys = toArray(keyOrList);
 				for (var i = keys.length; --i >= 0;) {
-					if (!props.hasOwnProperty(keys[i])) {
+					if (!hasOwn.call(props, keys[i])) {
 						return false;
 					}
 				}
@@ -257,7 +248,7 @@
 			keys: function () {
 				var keys = [];
 				for (var key in props) {
-					if (props.hasOwnProperty(key)) {
+					if (hasOwn.call(props, key)) {
 						keys.push(key);
 					}
 				}
@@ -267,7 +258,7 @@
 			// Add arbitrary properties to this atom's interface.
 			mixin: function (obj) {
 				for (var p in obj) {
-					if (obj.hasOwnProperty(p)) {
+					if (hasOwn.call(obj, p)) {
 						me[p] = obj[p];
 					}
 				}
@@ -285,7 +276,7 @@
 				for (var i = keys.length; --i >= 0;) {
 					key = keys[i];
 					provider = providers[key];
-					if (!props.hasOwnProperty(key) && provider) {
+					if (!hasOwn.call(props, key) && provider) {
 						provide(nucleus, key, provider);
 						delete providers[key];
 					} else {
@@ -355,9 +346,9 @@
 			// Set value for a key, or if `keyOrMap` is an object then set all the
 			// keys' corresponding values.
 			set: function (keyOrMap, value) {
-				if (typeof keyOrMap === 'object') {
+				if (typeof keyOrMap === typeObj) {
 					for (var key in keyOrMap) {
-						if (keyOrMap.hasOwnProperty(key)) {
+						if (hasOwn.call(keyOrMap, key)) {
 							set(nucleus, key, keyOrMap[key]);
 						}
 					}
@@ -371,4 +362,25 @@
 		return me;
 	};
 
+	atom.VERSION = VERSION;
+
+	// For backwards compatibility with < 0.4.0
+	atom.create = atom;
+
+	atom.noConflict = function () {
+		if (root[name] === atom) {
+			root[name] = had ? prev : undef;
+			if (!had) {
+				try {
+					delete root[name];
+				} catch (ex) {
+				}
+			}
+		}
+		return atom;
+	};
+
+	if (typeof module !== typeUndef && module.exports) {
+		module.exports = atom;
+	}
 }());
