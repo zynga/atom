@@ -76,7 +76,8 @@ The `.each()` method lets you execute a function on a series of properties.
 
 Listeners may be attached to atoms in a variety of ways.
 
-To be notified as soon as a property is set, use the `.once()` method.
+To be notified as soon as a property is set, use the `.once()` method.  The
+callback will be called immediately if the property is already set.
 
 	a.once('userInfo', function (userInfo) {
 		alert('Welcome, ' + userInfo.name + '!');
