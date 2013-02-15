@@ -4,7 +4,7 @@
 	var
 		atom,
 		name = 'atom',
-		VERSION = '0.4.0',
+		VERSION = '0.5.0',
 
 		ObjProto = Object.prototype,
 		hasOwn = ObjProto.hasOwnProperty,
@@ -125,6 +125,7 @@
 	// Return an instance.
 	atom = root[name] = function () {
 		var
+			args = slice.call(arguments, 0),
 			nucleus = { props: {}, needs: {}, providers: {}, listeners: [] },
 			props = nucleus.props,
 			needs = nucleus.needs,
@@ -161,6 +162,7 @@
 						}
 					}
 				}
+				return me;
 			},
 
 			// Remove references to all properties and listeners.  This releases
@@ -185,6 +187,7 @@
 					key = keys[i];
 					func(key, me.get(key));
 				}
+				return me;
 			},
 
 			// Establish two-way binding between a key or list of keys for two
@@ -222,6 +225,7 @@
 						me.set(key, value);
 					});
 				});
+				return me;
 			},
 
 			// Get current values for the specified keys.  If `func` is provided,
@@ -286,6 +290,7 @@
 				if (func) {
 					me.once(keys, func);
 				}
+				return me;
 			},
 
 			// Call `func` whenever any of the specified keys is next changed.  The
@@ -295,6 +300,7 @@
 			next: function (keyOrList, func) {
 				listeners.unshift(
 					{ keys: toArray(keyOrList), cb: func, calls: 1 });
+				return me;
 			},
 
 			// Unregister a listener `func` that was previously registered using
@@ -305,6 +311,7 @@
 						listeners.splice(i, 1);
 					}
 				}
+				return me;
 			},
 
 			// Call `func` whenever any of the specified keys change.  The values
@@ -312,6 +319,7 @@
 			on: function (keyOrList, func) { // alias: `bind`
 				listeners.unshift({ keys: toArray(keyOrList), cb: func,
 					calls: Infinity });
+				return me;
 			},
 
 			// Call `func` as soon as all of the specified keys have been set.  If
@@ -329,6 +337,7 @@
 					listeners.unshift(
 						{ keys: keys, cb: func, missing: missing, calls: 1 });
 				}
+				return me;
 			},
 
 			// Register a provider for a particular key.  The provider `func` is a
@@ -341,6 +350,7 @@
 				} else if (!providers[key]) {
 					providers[key] = func;
 				}
+				return me;
 			},
 
 			// Set value for a key, or if `keyOrMap` is an object then set all the
@@ -355,10 +365,16 @@
 				} else {
 					set(nucleus, keyOrMap, value);
 				}
+				return me;
 			}
 		};
 		me.bind = me.on;
 		me.unbind = me.off;
+
+		if (args.length) {
+			me.set.apply(me, args);
+		}
+
 		return me;
 	};
 

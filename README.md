@@ -48,14 +48,23 @@ This is `a`.
 An atom has properties.  The `.get()` and `.set()` methods may be employed to
 read and write values of any type.
 
+	a.set('key', 'value');
+	console.log('Value of key: ' + a.get('key'));
+
 	a.set({
 		pi: 3.141592653,
 		r: 5,
-		circ: function () {
+		circumference: function () {
 			return 2 * a.get('pi') * a.get('r');
 		}
 	});
-	console.log('Circumference: ' + a.get('circ')());
+	console.log('Circumference: ' + a.get('circumference')());
+
+Parameters to the constructor will also be set as properties.
+
+	a = atom('key', 'value');
+
+	a = atom({ pi: 3.141592653, r: 5 });
 
 Use `.has()` to query for existence of a property, and `.keys()` to get a list
 of all properties that have been set.
@@ -178,6 +187,26 @@ String together a series of asynchronous functions using the `.chain()` method.
 			});
 		}
 	);
+
+
+### Method Chaining
+
+Not to be confused with the `.chain()` method specifically, "method chaining"
+actually refers to the practice of stringing together multiple method calls in
+a single expression.
+
+	a = atom('start', new Date())
+		.once('loaded', function () {
+			console.log('Finished loading.');
+		})
+		.once('shutdown', function () {
+			console.log('Shutting down.');
+		})
+		.set('loaded', true);
+
+The `.chain()`, `.each()`, `.entangle()`, `.mixin()`, `.need()`, `.next()`,
+`.off()`, `.on()`, `.once()`, `.provide()` and `.set()` methods are all
+chainable.
 
 
 ### Cleanup

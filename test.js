@@ -28,6 +28,12 @@ function assert(msg, success) {
 	}
 }
 
+assert('constructor args treated as set(), single property',
+	atom('a', 'b').get('a') === 'b');
+
+assert('constructor args treated as set(), multiple properties',
+	atom({ a: 'b', c: 'd' }).get(['a', 'c']) + '' === 'b,d');
+
 a.set('a', 'A');
 assert('get() returns a single value', a.get('a') === 'A');
 
@@ -289,6 +295,19 @@ otherAtom.once('object', function (object) {
 });
 a.set('object', { a: 'A', b: 'B' });
 assert('entangle() works for object values', results + '' === 'A,B');
+
+var mc = atom();
+assert('method chaining works',
+	mc.need('a', function (a) { mc.set('b', 'c'); })
+	.next('b', function (b) { mc.set('c', 'd'); })
+	.on('c', function (c) { mc.set('d', 'e'); })
+	.once('d', function (d) { mc.set('e', 'f'); })
+	.provide('a', function (done) { done('b'); })
+	.chain(function () {
+		mc.set('f', 'g');
+	})
+	.set('success', mc.get('a,b,c,d,e,f'.split(',')) + '' === 'b,c,d,e,f,g')
+	.get('success') === true);
 
 
 logger(totals);
