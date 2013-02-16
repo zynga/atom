@@ -1,3 +1,9 @@
+//
+// atom.js
+// https://github.com/zynga/atom
+// Author: Chris Campbell (@quaelin)
+// License: BSD
+//
 (function (undef) {
 	'use strict';
 
