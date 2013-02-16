@@ -114,9 +114,9 @@ method.
 	}
 	a.on('error', myErrorHandler);
 
-(Note that setting a property with a primitive (string/number/boolean) value will
+Note that setting a property with a primitive (string/number/boolean) value will
 only trigger listeners if the value is *different*.  On the other hand, setting
-an array or object value will *always* trigger listeners.)
+an array or object value will *always* trigger listeners.
 
 You can unregister any listener using `.off()` (alias `.unbind()`).
 
