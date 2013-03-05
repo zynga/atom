@@ -10,7 +10,7 @@
 	var
 		atom,
 		name = 'atom',
-		VERSION = '0.5.0',
+		VERSION = '0.5.1',
 
 		ObjProto = Object.prototype,
 		hasOwn = ObjProto.hasOwnProperty,
@@ -82,7 +82,7 @@
 
 	// Property setter
 	function set(nucleus, key, value) {
-		var keys, listener, listeners = nucleus.listeners, values, missing,
+		var keys, listener, listeners = nucleus.listeners, missing,
 			listenersCopy = [].concat(listeners), i = listenersCopy.length,
 			props = nucleus.props, oldValue = props[key],
 			had = hasOwn.call(props, key),
@@ -282,7 +282,7 @@
 			// providers when possible, in order to try and create the required
 			// values.
 			need: function (keyOrList, func) {
-				var key, keys = toArray(keyOrList), values, provider;
+				var key, keys = toArray(keyOrList), provider;
 				for (var i = keys.length; --i >= 0;) {
 					key = keys[i];
 					provider = providers[key];
