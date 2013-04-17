@@ -120,7 +120,7 @@ an array or object value will *always* trigger listeners.
 
 You can unregister any listener using `.off()` (alias `.unbind()`).
 
-	a.off('error', myErrorHandler);
+	a.off(myErrorHandler);
 
 
 ### Needs and Providers
