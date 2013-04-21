@@ -82,6 +82,16 @@ assert('off() prevents the function from being called again',
 	results + '' === 'A1,B1,C,A2');
 
 results = [];
+a.on('aa', aListener);
+a.once('bb', aListener);
+a.once(['cc', 'dd'], aListener);
+a.off('aa', aListener);
+a.off(['cc', 'dd'], aListener);
+a.set({ aa: 'AA', bb: 'BB', cc: 'CC', dd: 'DD' });
+assert('off() will be selective about unbinding a listener, if keyOrList provided',
+	results + '' === 'BB');
+
+results = [];
 a.once('c', function (c) {
 	results.push(c);
 });

@@ -122,6 +122,11 @@ You can unregister any listener using `.off()` (alias `.unbind()`).
 
 	a.off(myErrorHandler);
 
+If you only want to remove the listener associated with a particular key or
+keys, you can specify those too:
+
+	a.off(['a', b'], myErrorHandler);
+
 
 ### Needs and Providers
 

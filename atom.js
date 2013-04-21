@@ -10,7 +10,7 @@
 	var
 		atom,
 		name = 'atom',
-		VERSION = '0.5.1',
+		VERSION = '0.5.2',
 
 		ObjProto = Object.prototype,
 		hasOwn = ObjProto.hasOwnProperty,
@@ -125,6 +125,18 @@
 		provider(function (result) {
 			set(nucleus, key, result);
 		});
+	}
+
+
+	// Determine whether two keys (or lists of keys) are equivalent.
+	function keysMatch(keyOrListA, keyOrListB) {
+		var a, b;
+		if (keyOrListA === keyOrListB) {
+			return true;
+		}
+		a = [].concat(toArray(keyOrListA)).sort();
+		b = [].concat(toArray(keyOrListB)).sort();
+		return a + '' === b + '';
 	}
 
 
@@ -310,10 +322,20 @@
 			},
 
 			// Unregister a listener `func` that was previously registered using
-			// `on()`, `bind()`, `need()`, `next()` or `once()`.
-			off: function (func) { // alias: `unbind`
-				for (var i = listeners.length; --i >= 0;) {
-					if (listeners[i].cb === func) {
+			// `on()`, `bind()`, `need()`, `next()` or `once()`.  `keyOrList` is
+			// optional; if provided, it will selectively remove the listener only
+			// for the specified combination of properties.
+			off: function (keyOrList, func) { // alias: `unbind`
+				var i = listeners.length, listener;
+				if (arguments.length === 1) {
+					func = keyOrList;
+					keyOrList = null;
+				}
+				while (--i >= 0) {
+					listener = listeners[i];
+					if (listener.cb === func &&
+						(!keyOrList || keysMatch(listener.keys, keyOrList)))
+					{
 						listeners.splice(i, 1);
 					}
 				}
