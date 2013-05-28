@@ -10,7 +10,7 @@
 	var
 		atom,
 		name = 'atom',
-		VERSION = '0.5.2',
+		VERSION = '0.5.3',
 
 		ObjProto = Object.prototype,
 		hasOwn = ObjProto.hasOwnProperty,
@@ -120,11 +120,23 @@
 	}
 
 
+	// Wrapper to prevent a callback from getting invoked more than once.
+	function preventMultiCall(callback) {
+		var ran;
+		return function () {
+			if (!ran) {
+				ran = true;
+				callback.apply(this, arguments);
+			}
+		};
+	}
+
+
 	// Helper function for setting up providers.
 	function provide(nucleus, key, provider) {
-		provider(function (result) {
+		provider(preventMultiCall(function (result) {
 			set(nucleus, key, result);
-		});
+		}));
 	}
 
 
@@ -160,7 +172,7 @@
 				q.args = slice.call(arguments, 0);
 				if (q.pending) {
 					q.next = null;
-					q.pending.apply({}, [doNext].concat(q.args));
+					q.pending.apply({}, [preventMultiCall(doNext)].concat(q.args));
 				}
 			}
 		}
