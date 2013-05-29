@@ -10,7 +10,7 @@
     "node"          : true,
     "rhino"         : false,
     "couch"         : false,
-    "wsh"           : true,   // Windows Scripting Host.
+    "wsh"           : false,  // Windows Scripting Host.
 
     "jquery"        : false,
     "prototypejs"   : false,
@@ -25,7 +25,7 @@
 
     // ECMAScript 5.
     "es5"           : true,   // Allow ECMAScript 5 syntax.
-    "strict"        : false,  // Require `use strict` pragma  in every file.
+    "strict"        : false,  // Require `use strict` pragma in every file.
     "globalstrict"  : false,  // Allow global "use strict" (also enables 'strict').
 
 
