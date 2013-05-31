@@ -140,7 +140,7 @@
 	}
 
 
-	// Determine whether two keys (or lists of keys) are equivalent.
+	// Determine whether two keys (or sets of keys) are equivalent.
 	function keysMatch(keyOrListA, keyOrListB) {
 		var a, b;
 		if (keyOrListA === keyOrListB) {
