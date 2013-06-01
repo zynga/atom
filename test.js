@@ -369,4 +369,8 @@ setTimeout(function () {
 		set('z' + i);
 	}
 	logger('END');
+
+	if (totals.fail && inNode) {
+		process.exit(1);
+	}
 }, 100);
