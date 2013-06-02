@@ -10,7 +10,7 @@
 	var
 		atom,
 		name = 'atom',
-		VERSION = '0.5.4',
+		VERSION = '0.5.5',
 
 		ObjProto = Object.prototype,
 		hasOwn = ObjProto.hasOwnProperty,

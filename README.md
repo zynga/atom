@@ -220,3 +220,11 @@ Release references to all data and callback functions with the `.destroy()`
 method.
 
 	a.destroy();
+
+
+Additional Resources
+====================
+
+ - [Blog post: Barriers with Atom](http://christophercampbell.wordpress.com/2013/01/01/barriers-with-atom/)
+ - [Blog post: Serial and Parallel Tasks with Atom](http://christophercampbell.wordpress.com/2013/01/01/serial-and-parallel-tasks-with-atom/)
+ - [Blog post: Providers with Atom](http://christophercampbell.wordpress.com/2013/01/01/providers-with-atom/)
