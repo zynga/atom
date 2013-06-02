@@ -3,6 +3,7 @@
   "version": "0.5.4",
   "description": "Small JS class that provides async control flow, property listeners, barrier pattern, and more.",
   "author": "Chris Campbell <ccampbell@zynga.com>",
+  "homepage": "https://github.com/zynga/atom",
   "repository": {
     "type": "git",
     "url": "git://github.com/zynga/atom.git"
