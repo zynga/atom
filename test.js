@@ -1,5 +1,6 @@
 /*global atom:true, logger:true, process, require*/
 atom = typeof atom === 'undefined' ? require('./atom') : atom;
+logger = (typeof logger !== 'undefined' && logger) || console.log;
 
 var
 	inBrowser = typeof document !== 'undefined',
@@ -11,9 +12,6 @@ var
 	results = [],
 	totals = { success: 0, fail: 0, total: 0 }
 ;
-
-
-logger = (typeof logger !== 'undefined' && logger) || console.log;
 
 function assert(msg, success) {
 	totals.total++;
