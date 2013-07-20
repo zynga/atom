@@ -8,7 +8,7 @@ control flow, event/property listeners, barriers, and more.
 Features
 ========
 
- - Small: 3.4K minified, 1.5K gzipped.
+ - Small: 3.4kB minified, 1.5kB gzipped.
  - No dependencies: works in a browser, or in node.
  - Enables programming patterns that reduce the need for deeply nested
    callbacks and conditionals.
