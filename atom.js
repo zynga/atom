@@ -10,7 +10,7 @@
 	var
 		atom,
 		name = 'atom',
-		VERSION = '0.5.5',
+		VERSION = '0.5.6',
 
 		ObjProto = Object.prototype,
 		hasOwn = ObjProto.hasOwnProperty,
@@ -125,7 +125,7 @@
 		var ran;
 		return function () {
 			if (!ran) {
-				ran = true;
+				ran = 1;
 				callback.apply(this, arguments);
 			}
 		};
@@ -156,11 +156,11 @@
 	atom = root[name] = function () {
 		var
 			args = slice.call(arguments, 0),
-			nucleus = { props: {}, needs: {}, providers: {}, listeners: [] },
-			props = nucleus.props,
-			needs = nucleus.needs,
-			providers = nucleus.providers,
-			listeners = nucleus.listeners,
+			nucleus = {},
+			props = nucleus.props = {},
+			needs = nucleus.needs = {},
+			providers = nucleus.providers = {},
+			listeners = nucleus.listeners = [],
 			q = []
 		;
 
@@ -171,7 +171,7 @@
 					q.shift() : q.next;
 				q.args = slice.call(arguments, 0);
 				if (q.pending) {
-					q.next = null;
+					q.next = 0;
 					q.pending.apply({}, [preventMultiCall(doNext)].concat(q.args));
 				}
 			}
@@ -206,7 +206,7 @@
 					q.pop();
 				}
 				nucleus = props = needs = providers = listeners =
-					q = q.pending = q.next = q.args = null;
+					q = q.pending = q.next = q.args = 0;
 			},
 
 			// Call `func` on each of the specified keys.  The key is provided as
@@ -248,10 +248,10 @@
 				}
 				me.each(keys, function (key) {
 					var otherKey = map[key];
-					me.bind(key, function (value) {
+					me.on(key, function (value) {
 						otherAtom.set(otherKey, value);
 					});
-					otherAtom.bind(otherKey, function (value) {
+					otherAtom.on(otherKey, function (value) {
 						me.set(key, value);
 					});
 				});
@@ -341,7 +341,7 @@
 				var i = listeners.length, listener;
 				if (arguments.length === 1) {
 					func = keyOrList;
-					keyOrList = null;
+					keyOrList = 0;
 				}
 				while (--i >= 0) {
 					listener = listeners[i];
