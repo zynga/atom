@@ -2,6 +2,8 @@
 atom = typeof atom === 'undefined' ? require('./atom') : atom;
 logger = (typeof logger !== 'undefined' && logger) || console.log;
 
+logger('atom ' + atom.VERSION);
+
 var
 	inBrowser = typeof document !== 'undefined',
 	inNode = !inBrowser,
