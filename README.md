@@ -28,7 +28,8 @@ To run from command line using node.js:
 	node test.js      // brief
 	node test.js -v   // verbose
 
-To run in a browser, open `test.html`.
+To run in a browser, open `test.html`, or go 
+[here](http://zynga.github.io/atom/test.html).
 
 
 Tutorial
