@@ -149,7 +149,7 @@ If you only want to remove the listener associated with a particular key or
 keys, you can specify those too:
 
 ```javascript
-	a.off(['a', b'], myErrorHandler);
+	a.off(['a', 'b'], myErrorHandler);
 ```
 
 
