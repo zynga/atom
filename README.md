@@ -37,13 +37,13 @@ Tutorial
 
 This is `a`.
 
-```javascript
+```js
 	var a
 ```
 
 `a` is an atom.
 
-```javascript
+```js
 	var a = atom();
 ```
 
@@ -53,7 +53,7 @@ This is `a`.
 An atom has properties.  The `.get()` and `.set()` methods may be employed to
 read and write values of any type.
 
-```javascript
+```js
 	a.set('key', 'value');
 	console.log('Value of key: ' + a.get('key'));
 
@@ -69,7 +69,7 @@ read and write values of any type.
 
 Parameters to the constructor will also be set as properties.
 
-```javascript
+```js
 	a = atom('key', 'value');
 
 	a = atom({ pi: 3.141592653, r: 5 });
@@ -78,7 +78,7 @@ Parameters to the constructor will also be set as properties.
 Use `.has()` to query for existence of a property, and `.keys()` to get a list
 of all properties that have been set.
 
-```javascript
+```js
 	if (a.has('game')) {
 		console.log('What "a" brings to the table: ' + a.keys());
 	}
@@ -86,7 +86,7 @@ of all properties that have been set.
 
 The `.each()` method lets you execute a function on a series of properties.
 
-```javascript
+```js
 	a.set({ r: 0xBA, g: 0xDA, b: 0x55 });
 	a.each(['r', 'g', 'b'], function (key, value) {
 		console.log(key + ': ' + value);
@@ -101,7 +101,7 @@ Listeners may be attached to atoms in a variety of ways.
 To be notified as soon as a property is set, use the `.once()` method.  The
 callback will be called immediately if the property is already set.
 
-```javascript
+```js
 	a.once('userInfo', function (userInfo) {
 		alert('Welcome, ' + userInfo.name + '!');
 	});
@@ -109,7 +109,7 @@ callback will be called immediately if the property is already set.
 
 Many atom methods can work with more than one property at a time.
 
-```javascript
+```js
 	a.once(['userInfo', 'appInfo'], function (user, app) {
 		alert('Welcome to ' + app.name + ', ' + user.name + '!');
 	});
@@ -118,7 +118,7 @@ Many atom methods can work with more than one property at a time.
 When you just want to know about the next change, even if the property is
 already set, use `.next()`.
 
-```javascript
+```js
 	a.next('click', function (click) {
 		alert('Are you done clicking on ' + click.button + ' yet?');
 	});
@@ -127,7 +127,7 @@ already set, use `.next()`.
 To watch for any future changes to a property, use the `.on()` (alias `.bind()`)
 method.
 
-```javascript
+```js
 	function myErrorHandler(error) {
 		console.log('There was a grevious calamity of code in ' + a.get('module'));
 		console.log(error);
@@ -141,14 +141,14 @@ an array or object value will *always* trigger listeners.
 
 You can unregister any listener using `.off()` (alias `.unbind()`).
 
-```javascript
+```js
 	a.off(myErrorHandler);
 ```
 
 If you only want to remove the listener associated with a particular key or
 keys, you can specify those too:
 
-```javascript
+```js
 	a.off(['a', b'], myErrorHandler);
 ```
 
@@ -157,7 +157,7 @@ keys, you can specify those too:
 
 You can register a provider for a property.
 
-```javascript
+```js
 	a.provide('privacyPolicy', function (done) {
 		httpRequest(baseUrl + '/privacy.txt', function (content) {
 			done(content);
@@ -170,7 +170,7 @@ already set.  Use the `.need()` method to declare a need for a particular
 property.  If a corresponding provider is registered, it will be invoked.
 Otherwise, `.need()` behaves just like `.once()`.
 
-```javascript
+```js
 	a.on('clickPrivacy', function () {
 		a.need('privacyPolicy', function (text) {
 			element.innerText = text;
@@ -185,7 +185,7 @@ Properties of two or more atoms can be entangled, using the `.entangle()`
 method.  When an entangled property gets set on one atom, the value will
 instantly propagate to the other.
 
-```javascript
+```js
 	var b = atom();
 	a.entangle(b, 'email');
 	a.set('email', 'someone@example.com');
@@ -194,14 +194,14 @@ instantly propagate to the other.
 
 `.entangle()` also works when called with a list of properties.
 
-```javascript
+```js
 	a.entangle(b, ['firstname', 'lastname']);
 ```
 
 If called with a map of property names, then property 'X' on one atom can be
 entangled with property 'Y' on the other atom.
 
-```javascript
+```js
 	a.entangle(b, { firstname: 'first', lastname: 'last' });
 	a.set('firstname', 'Joe');
 	console.log('Welcome, ' + b.get('first'));
@@ -215,7 +215,7 @@ change *after* entanglement.
 
 String together a series of asynchronous functions using the `.chain()` method.
 
-```javascript
+```js
 	a.chain(
 		function (nextLink) {
 			callAjaxMethod('callThisFirst', function (firstResult) {
@@ -237,7 +237,7 @@ Not to be confused with the `.chain()` method specifically, "method chaining"
 actually refers to the practice of stringing together multiple method calls in
 a single expression.
 
-```javascript
+```js
 	a = atom('start', new Date())
 		.once('loaded', function () {
 			console.log('Finished loading.');
@@ -258,9 +258,12 @@ chainable.
 Release references to all data and callback functions with the `.destroy()`
 method.
 
-```javascript
+```js
 	a.destroy();
 ```
+
+After being destroyed, most of an atom's functions will throw exceptions when
+called.
 
 
 Additional Resources
